@@ -1,0 +1,32 @@
+.country-table {
+    width: 90%;
+    margin: auto;
+    margin-top: 25px;
+  }
+  .country-button-container {
+    padding-bottom: 16px;
+  }
+  
+  .country-button + .country-button {
+    margin-left: 8px;
+  }
+
+  .delete-icon {
+    color: red;
+  }
+  .edit-icon {
+    color: purple;
+  }
+  
+  ::ng-deep .mat-form-field-infix {
+    width: 100% !important;
+  }
+  
+  .form-input {
+    padding-right: 5px;
+  }
+
+  .custom-row {
+    background-color: rgb(106, 105, 105);
+    
+  }

@@ -1,0 +1,84 @@
+<article class="table-header">
+  <div>
+    <h1>Example Table Edit</h1>
+  </div>
+  <div class="country-button-container">
+    <button
+      class="country-button"
+      mat-raised-button
+      (click)="removeSelectedRows()"
+      >    
+    <i class="fas fa-trash-alt"></i> Remove Rows
+    </button>
+    <button class="button-add-row" mat-raised-button (click)="addRow()">
+      <i class="far fa-plus-square"></i> Add Row
+    </button>
+    <button class="button-refresh-row" mat-raised-button (click)="refreshRow()">
+      <i class="fas fa-sync-alt"></i> Refresh
+    </button>
+  </div>
+</article>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 country-table">
+  <ng-container [matColumnDef]=" col.key" *ngFor="let col of columnsSchema">
+    <th mat-header-cell *matHeaderCellDef [ngSwitch]="col.key" class="custom-row">
+      <span *ngSwitchCase="'isSelected'">
+        <mat-checkbox
+          (change)="selectAll($event)"
+          [checked]="isAllSelected()"
+          [indeterminate]="!isAllSelected() && isAnySelected()"
+        ></mat-checkbox>
+      </span>
+      <span *ngSwitchDefault>{{ col.label }}</span>
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <div [ngSwitch]="col.type" *ngIf="!element.isEdit">
+        <ng-container *ngSwitchCase="'isSelected'">
+          <mat-checkbox
+            (change)="element.isSelected = $event.checked"
+            [checked]="element.isSelected"
+          ></mat-checkbox>
+        </ng-container>
+        <div class="btn-edit" *ngSwitchCase="'isEdit'">
+          <button 
+          mat-button (click)="element.isEdit = !element.isEdit" matTooltip="Edit">  
+          <i class="fa-solid fa-pen-to-square edit-icon"></i>    
+          </button>
+          <button
+            mat-button
+            (click)="removeRow(element.id)"
+            matTooltip="Delete"
+          > <i class="fa-solid fa-trash delete-icon"></i>
+          
+          </button>
+        </div>
+        <span *ngSwitchDefault>
+          {{ element[col.key] }}
+        </span>
+      </div>
+      <div [ngSwitch]="col.type" *ngIf="element.isEdit">
+        <div *ngSwitchCase="'isSelected'"></div>
+        <div class="btn-edit" *ngSwitchCase="'isEdit'">
+          <button
+            mat-button
+            (click)="editRow(element)"
+            [disabled]="disableSubmit(element.id)"
+          >
+            Done
+          </button>
+        </div>
+        <mat-form-field class="form-input" *ngSwitchDefault>
+          <input
+            matInput
+            [required]="col.required"
+            [pattern]="col.pattern"
+            [type]="col.type"
+            [(ngModel)]="element[col.key]"
+            (change)="inputHandler($event, element.id, col.key)"
+          />
+        </mat-form-field>
+      </div>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="ColumnKey"></tr>
+  <tr mat-row *matRowDef="let row; columns: ColumnKey"></tr>
+</table>
